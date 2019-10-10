@@ -184,6 +184,19 @@ export const asyncRoutes = [
     ]
   },
 
+  {
+    path: '/third-config',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/third-config/index'),
+        name: 'ThirdConfig',
+        meta: { title: 'ThirdConfig', icon: 'icon', noCache: true }
+      }
+    ]
+  },
+
   /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
   chartsRouter,

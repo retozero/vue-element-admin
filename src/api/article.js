@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/article/list',
+    url: '/api2/third/config',
     method: 'get',
     params: query
   })
@@ -26,7 +26,7 @@ export function fetchPv(pv) {
 
 export function createArticle(data) {
   return request({
-    url: '/article/create',
+    url: '/api2/third/config',
     method: 'post',
     data
   })
