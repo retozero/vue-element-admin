@@ -34,8 +34,8 @@ export function createArticle(data) {
 
 export function updateArticle(data) {
   return request({
-    url: '/article/update',
-    method: 'post',
+    url: '/api2/third/config',
+    method: 'put',
     data
   })
 }

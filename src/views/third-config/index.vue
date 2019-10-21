@@ -50,7 +50,7 @@
           <span>{{ scope.row.func_code }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="funcDesc" width="150px" align="center">
+      <el-table-column label="funcDesc" width="400px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.func_desc }}</span>
         </template>
@@ -60,10 +60,10 @@
           <span>{{ scope.row.func_module }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="gmtCreate" width="150px" align="center">
+      <el-table-column label="gmtCreate" width="170px" align="center">
         <template slot-scope="scope">
           <!-- <span>{{ scope.row.gmt_create | parseTime('{y}-{m}-{d} {h}:{i}') }}</span> -->
-          <span>{{ scope.row.gmt_create }}</span>
+          <span>{{ scope.row.gmt_create == null ? '' : scope.row.gmt_create | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
@@ -105,9 +105,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="资源解析方式" prop="uri_use_type">
-          <el-select v-model="temp.uri_use_type" class="filter-item" placeholder="请选择">
+          <el-select v-model="temp.uri_use_type" class="filter-item" placeholder="请选择" @change="updateFuncClassName()">
             <el-option v-for="item in uri_use_types" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
+        </el-form-item>
+        <el-form-item v-show="true" label="资源解析类名" prop="func_class_name">
+          <el-input v-model="temp.func_class_name" readonly="true" />
         </el-form-item>
         <el-form-item label="资源渲染方式" prop="uri_show_type">
           <el-select v-model="temp.uri_show_type" class="filter-item" placeholder="请选择">
@@ -187,7 +190,9 @@ const func_types = [
 const uri_use_types = [
   { key: 'page_load', display_name: '页面加载' },
   { key: 'data_extract', display_name: '数据提取' },
-  { key: 'miniprogram', display_name: '小程序' }
+  { key: 'miniprogram', display_name: '小程序' },
+  { key: 'cloud_file', display_name: '云盘文件' },
+  { key: 'product_card', display_name: '产品卡片' }
 ]
 
 const uri_show_types = [
@@ -197,8 +202,11 @@ const uri_show_types = [
 ]
 
 const template_ids = [
-  { key: 'template001', display_name: '文本解析' },
-  { key: 'template-pagecard', display_name: '点击卡片' }
+  { key: 'template001', display_name: '产品在售' },
+  { key: 'template-pagecard', display_name: '点击卡片' },
+  { key: 'miniprogram', display_name: '小程序' },
+  { key: 'template-commission', display_name: '查询佣金' },
+  { key: 'template-product-card', display_name: '产品卡片' }
 ]
 
 const request_methods = [
@@ -206,11 +214,7 @@ const request_methods = [
   { key: 'POST', display_name: 'POST' },
   { key: 'PUT', display_name: 'PUT' },
   { key: 'PATCH', display_name: 'PATCH' },
-  { key: 'DELETE', display_name: 'DELETE' },
-  { key: 'TRACE', display_name: 'TRACE' },
-  { key: 'HEAD', display_name: 'HEAD' },
-  { key: 'CONNECT', display_name: 'CONNECT' },
-  { key: 'OPTIONS', display_name: 'OPTIONS' }
+  { key: 'DELETE', display_name: 'DELETE' }
 ]
 
 const params_types = [
@@ -302,15 +306,9 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        console.log(response.data.list)
-        console.log(response.data.total)
         this.list = response.data.list
         this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
       })
     },
     handleFilter() {
@@ -454,6 +452,19 @@ export default {
         : sort === `-${key}`
           ? 'descending'
           : ''
+    },
+    updateFuncClassName() {
+      if (this.temp.uri_use_type === 'data_extract') {
+        this.temp.func_class_name = 'funcDataExtractService'
+      } else if (this.temp.uri_use_type === 'cloud_file') {
+        this.temp.func_class_name = 'funcCloudService'
+      } else if (this.temp.uri_use_type === 'miniprogram') {
+        this.temp.func_class_name = 'funcMiniProgramService'
+      } else if (this.temp.uri_use_type === 'product_card') {
+        this.temp.func_class_name = 'funcProductCardService'
+      } else {
+        this.temp.func_class_name = 'funcPageLoadService'
+      }
     }
   }
 }
