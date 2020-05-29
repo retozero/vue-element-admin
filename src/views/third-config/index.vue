@@ -99,17 +99,12 @@
             <el-option v-for="item in func_modules" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
         </el-form-item>
-        <el-form-item label="指令类型" prop="func_type">
-          <el-select v-model="temp.func_type" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in func_types" :key="item.key" :label="item.display_name" :value="item.key" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="资源解析方式" prop="uri_use_type">
           <el-select v-model="temp.uri_use_type" class="filter-item" placeholder="请选择" @change="updateFuncClassName()">
             <el-option v-for="item in uri_use_types" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
         </el-form-item>
-        <el-form-item v-show="true" label="资源解析类名" prop="func_class_name">
+        <el-form-item v-show="false" label="资源解析类名" prop="func_class_name">
           <el-input v-model="temp.func_class_name" readonly="true" />
         </el-form-item>
         <el-form-item label="资源渲染方式" prop="uri_show_type">
@@ -178,13 +173,6 @@ const func_modules = [
   { key: '凤凰社管家', display_name: '凤凰社管家' },
   { key: '基本法管家', display_name: '基本法管家' },
   { key: '服务网点', display_name: '服务网点' }
-]
-
-const func_types = [
-  { key: 'none', display_name: '非指令' },
-  { key: 'system', display_name: '系统级指令' },
-  { key: 'cust_static', display_name: '自定义-静态指令' },
-  { key: 'cust_dynamic', display_name: '自定义-动态指令' }
 ]
 
 const uri_use_types = [
@@ -265,7 +253,6 @@ export default {
       },
       importanceOptions: [1, 2, 3],
       func_modules,
-      func_types,
       uri_use_types,
       uri_show_types,
       template_ids,
